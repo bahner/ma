@@ -1,74 +1,27 @@
-# Rendezvous
+# Rendezvous and MIME types
 
-The rendezvous is just a text string uses as a rendezvous string in libp2p DHT peer discovery.
-Since i don't know where or if I should register a namespace, I just invent my own and trademark it.
+Though we don't have any registered [MIME] type, at least not yet, we use the following base MIME type:
 
-I propose that all elements of a Sub-Etha™ rendezvous connection string should be trademarked.
+`application/x-ma-message`
 
-## Sub-Etha™
+NB! There is no strong correlation with actual MIME types. This is just a convention that makes sense.
+The MIME registry is a valuable database and there are lot of tools for parsing them. So we use it.
 
-Since we don't have any registered namespace, we just invent our own :-)
-Since we haven't registered it anywhere, just state that we intend to trademark it, then others stay away :-)
+## Rendezvous strings
 
-The namespace is easily just `Sub-Etha™` and this is the only rendezvous string you need really. We do need one, though.
+The rendezvous string is used for GossipSub and other rendezvous protocols. This is the only rendezvous string you need really. We do need one, though.
 
-Using this signifies that you are sending Sub-Etha™ structured messages over it, which can be used for authenticated and encrypted messages using the spec.
+For the same of simplicity and ease of use, we use the following MIME types for the rendezvous strings:
 
-This can be used for chat messages and such.
+`application/x-ma-message-rendezvous`
 
-To start sending message for fun and profit, use: `Sub-Etha™`
-This signifies that you are folloing the Sub-Etha™ message format.
+### My SPACE™
 
-Rendezvous string: `Sub-Etha™`
+If you have your [own world or namespace][SPACE], you can use this tag to signify that you are sending messages for that world or namespace.
 
-## SPACE™
+`application/x-ma-message-rendezvous+myspace`
 
-I see SPACE™ as an implementation or POC for this type of actor messaging. So while Sub-Etha™ can be used in general, the MOO in intend to write, should probably use SPACE™ as well.
+This could mean that others won't see you. Implementers are free to parse this as they see fit. Think of the rendezvous string as a radio station that you tune into. If you don't know the station, you won't hear it.
 
-So SPACE™ messages extend the Sub-Etha™ messages with types of messages, eg: Policies, Commands, Objects etc.
-
-Rendezvous string: `Sub-Etha™:SPACE™`
-
-## The Earth™
-
-Someone should implement a paved version. If you do that, you can use the following rendezvous string to stand out from the crowd.
-
-Rendezvous string: `Sub-Etha™:SPACE™:The Earth™`
-
-## Technicalities
-
-A rendezvous string should match the following BNF and regexes:
-
-```BNF
-<string> ::= "Sub-Etha™" | "Sub-Etha™" <element-list>
-<element-list> ::= ":" <element> | ":" <element> <element-list>
-<element> ::= <printable-chars> "™"
-<printable-chars> ::= <printable-char> | <printable-char> <printable-chars>
-<printable-char> ::= "any printable UTF-8 character"
-```
-
-```go
-// golang regex
-^Sub-Etha™(:[\pL\pM\pN\pP\pS]+™)*$
-```
-
-```elixir
-defmodule SubEtha.Rendezvous do
-  @pattern ~r/^Sub-Etha™(:[^\x00-\x1F]+™)*$/
-
-  @doc """
-  Checks if a given string is valid according to the specified pattern and is composed of printable characters.
-  """
-  def isValid?(str) do
-    is_printable = String.printable?(str)
-    is_match = Regex.match?(@pattern, str)
-    is_printable and is_match
-  end
-end
-```
-
-### Multibase
-
-I suspect multibasing the actual is a thought to be had, but that add's an unneeded layer of quickly parsing messages on gossipsub. Better just leave it as string, I think.
-
-2023-09-23: bahner
+[SPACE]: <https://github.com/bahner/SPACE> "Spaces for Punk Actors in Cybernetic Entities"
+[MIME]: <https://www.iana.org/assignments/media-types/media-types.xhtml> "IANA MIME Media Types"
